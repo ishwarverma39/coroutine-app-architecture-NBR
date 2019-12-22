@@ -1,95 +1,74 @@
 package com.livtech.common.core.network
 
-import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.map
 import com.livtech.common.core.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
 import retrofit2.Response
 
 abstract class NetworkBoundResource<ResultType, RequestType>(
-    val shouldLoad: Boolean = true,
+    private val shouldLoad: Boolean = true,
     var call: suspend () -> Response<RequestType>,
-    val scope: CoroutineScope
+    scope: CoroutineScope,
+    private val errorParser: ErrorMessageParser = ErrorMessageParser()
 ) {
-    val result: MediatorLiveData<Resource<ResultType?>> = MediatorLiveData()
+    private val result: LiveData<Resource<ResultType?>>
 
     init {
-        result.apply {
-            value = Resource.Loading(null, "Loading")
-            also {
-                scope.launch(Dispatchers.IO) {
-                    val data = loadFromDb()
-                    withContext(Dispatchers.Main) {
-                        value =
-                            Resource.Loading(
-                                data,
-                                "Loading"
-                            )
+        result = liveData(scope.coroutineContext + Dispatchers.IO) {
+            val disposable = emitSource(
+                loadFromDb().map {
+                    Resource.Loading(it, getLoadingMessage())
+                }
+            )
+            if (shouldFetch()) {
+                val res = makeApiCall()
+                disposable.dispose()
+                when (res.status) {
+                    SUCCESS -> {
+                        saveApiCallResponse(res.data)
+                        emitSource(
+                            loadFromDb().map {
+                                Resource.Success(it)
+                            }
+                        )
+                    }
+                    FAILED -> {
+                        emitSource(
+                            loadFromDb().map {
+                                Resource.Error(null, res.message)
+                            }
+                        )
                     }
                 }
-            }
-            also {
-                if (shouldFetch()) {
-                    scope.launch(Dispatchers.IO) {
-                        val res = makeApiCall()
-                        when (res.status) {
-                            SUCCESS -> {
-                                saveApiCallResponse(res.data)
-                                val data = loadFromDb()
-                                withContext(Dispatchers.Main) {
-                                    value =
-                                        Resource.Success(
-                                            data
-                                        )
-                                }
-                            }
-                            FAILED -> {
-                                withContext(Dispatchers.Main) {
-                                    value =
-                                        Resource.Error(
-                                            null,
-                                            res.message
-                                        )
-                                }
-
-                            }
-                        }
+            } else {
+                emitSource(
+                    loadFromDb().map {
+                        Resource.Success(it)
                     }
-                }else {
-                    value = Resource.Success(null)
-                }
+                )
             }
         }
     }
 
     private suspend fun makeApiCall(): Resource<RequestType?> {
-        try {
-            return call.invoke().let {
+        return try {
+            call.invoke().let {
                 if (it.isSuccessful) {
                     if (it.body() == null) {
-                        onApiCallFailed("Something went wrong")
-                        Resource.Error(
-                            null,
-                            "Something went wrong"
-                        )
+                        Resource.Error(null, onApiCallFailed(it))
                     } else {
                         Resource.Success(it.body())
                     }
                 } else {
-                    onNetworkError(it.errorBody())
-                    Resource.Error(null, it.message())
+                    Resource.Error(null, onApiCallFailed(it))
                 }
             }
-        } catch (e: Exception) {
-            return Resource.Error(
-                null,
-                e.message
-            )
+        } catch (t: Throwable) {
+            Resource.Error(null, onNetworkError(t))
         }
 
     }
@@ -101,16 +80,26 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
         return shouldLoad
     }
 
-    @MainThread
-    protected abstract suspend fun loadFromDb(): ResultType
+    @WorkerThread
+    abstract fun loadFromDb(): LiveData<ResultType>
 
-    protected abstract suspend fun saveApiCallResponse(response: RequestType?)
+    @WorkerThread
+    abstract suspend fun saveApiCallResponse(response: RequestType?)
 
-    protected fun onNetworkError(error: ResponseBody?) {
-        //todo need to log the error
+    @WorkerThread
+    open fun onNetworkError(t: Throwable): String {
+        return errorParser.onNetworkError(t)
     }
 
-    protected fun onApiCallFailed(message: String) {
-        //todo need to loa the error
+    @WorkerThread
+    open fun onApiCallFailed(response: Response<RequestType>): String {
+        return errorParser.onApiCallFailed(response)
+    }
+
+    /**
+     * Subclasses should override this methods to show their own loading message
+     */
+    open fun getLoadingMessage(): String {
+        return "Loading..."
     }
 }

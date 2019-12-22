@@ -1,9 +1,10 @@
 package com.livtech.common.core
 
 import com.livtech.common.core.network.ApiClient
+import kotlinx.coroutines.CoroutineScope
 import retrofit2.Response
 
-open class BaseRepo {
+open class BaseRepo (val scope: CoroutineScope){
 
     suspend fun <T> makeApiCall(call: suspend () -> Response<T>): Resource<T?> {
         val response = call.invoke()

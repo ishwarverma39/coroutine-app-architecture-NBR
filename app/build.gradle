@@ -75,4 +75,12 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     implementation project(path: ':common')
 
+    def arch_version = '2.2.0-rc03'
+    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.1.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$arch_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$arch_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$arch_version"
+
+
 }

@@ -1,6 +1,7 @@
 package com.livetech.demo.ui
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.livetech.demo.core.AppConstants
 import com.livetech.demo.core.PhotoRepo
 import com.livetech.demo.core.models.Photo
@@ -11,15 +12,15 @@ import com.livtech.common.core.network.SUCCESS
 
 class PhotoViewModel : BaseViewModel() {
 
-    val photos = ArrayList<Photo>(0)
+    private val photos = ArrayList<Photo>(0)
     val photoData = MutableLiveData<ArrayList<Photo>>()
     var page: Int = 1
-    val repo = PhotoRepo(scope)
+    private val repo = PhotoRepo(viewModelScope)
     var totalPages = 1
     var searchFor = ""
     val loading = MutableLiveData<Boolean>()
 
-    fun fetchPhotos() {
+    private fun fetchPhotos() {
         repo.getPhotos(getParams(searchFor)).observeForever { resource ->
             if (resource.data != null) {
                 updateList(resource.data)

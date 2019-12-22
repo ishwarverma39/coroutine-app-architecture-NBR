@@ -16,8 +16,8 @@ import com.livtech.common.ui.SimpleSearchTextChangeListener
 
 class MainActivity : AppCompatActivity() {
     lateinit var viewModel: PhotoViewModel
-    lateinit var adapter: PhotosAdapter
-    val photos = ArrayList<Photo>()
+    private lateinit var adapter: PhotosAdapter
+    private val photos = ArrayList<Photo>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
