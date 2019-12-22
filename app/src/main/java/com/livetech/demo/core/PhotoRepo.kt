@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.livetech.demo.core.models.PhotoData
 import com.livetech.demo.core.models.PhotoResponse
-import com.livtech.common.core.BaseRepo
-import com.livtech.common.core.Resource
+import com.livtech.common.core.models.BaseRepo
+import com.livtech.common.core.models.Resource
 import com.livtech.common.core.network.NetworkBoundResource
 import kotlinx.coroutines.CoroutineScope
 

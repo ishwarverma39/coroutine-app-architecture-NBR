@@ -1,4 +1,4 @@
-package com.livtech.common.core
+package com.livtech.common.core.models
 
 import com.livtech.common.core.network.ApiClient
 import kotlinx.coroutines.CoroutineScope

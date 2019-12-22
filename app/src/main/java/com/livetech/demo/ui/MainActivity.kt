@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.livetech.demo.R
 import com.livetech.demo.core.models.Photo
-import com.livtech.common.ui.SimpleScrollListener
-import com.livtech.common.ui.SimpleSearchTextChangeListener
+import com.livtech.common.ui.listeners.SimpleScrollListener
+import com.livtech.common.ui.listeners.SimpleSearchTextChangeListener
 
 class MainActivity : AppCompatActivity() {
     lateinit var viewModel: PhotoViewModel
@@ -48,8 +48,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun initSearchView() {
         val search = findViewById<EditText>(R.id.search_edit)
-        search.addTextChangedListener(SimpleSearchTextChangeListener(onSearchTextChange = { searchText -> viewModel.doSearching(searchText)
-        }, lifeCycle = this.lifecycle) )
+        search.addTextChangedListener(
+            SimpleSearchTextChangeListener(
+                onSearchTextChange = { searchText ->
+                    viewModel.doSearching(searchText)
+                },
+                lifeCycle = this.lifecycle
+            )
+        )
     }
 
     private fun initViewModels() {

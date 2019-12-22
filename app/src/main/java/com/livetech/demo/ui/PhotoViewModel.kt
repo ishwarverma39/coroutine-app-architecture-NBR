@@ -9,6 +9,7 @@ import com.livetech.demo.core.models.PhotoData
 import com.livtech.common.core.network.FAILED
 import com.livtech.common.core.network.LOADING
 import com.livtech.common.core.network.SUCCESS
+import com.livtech.common.ui.viewmodels.BaseViewModel
 
 class PhotoViewModel : BaseViewModel() {
 

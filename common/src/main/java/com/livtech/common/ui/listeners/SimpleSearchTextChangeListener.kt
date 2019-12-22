@@ -1,4 +1,4 @@
-package com.livtech.common.ui
+package com.livtech.common.ui.listeners
 
 import android.text.Editable
 import android.text.TextWatcher

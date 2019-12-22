@@ -4,7 +4,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
-import com.livtech.common.core.Resource
+import com.livtech.common.core.models.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Response

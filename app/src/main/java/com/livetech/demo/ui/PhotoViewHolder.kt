@@ -9,13 +9,9 @@ import com.livetech.demo.R
 import com.livetech.demo.core.models.Photo
 
 class PhotoViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
-    val imageView :ImageView
-    val titleText : TextView
+    private val imageView :ImageView = itemView.findViewById(R.id.photo_image)
+    private val titleText : TextView = itemView.findViewById(R.id.title_text)
 
-    init {
-        imageView=itemView.findViewById(R.id.photo_image)
-        titleText = itemView.findViewById(R.id.title_text)
-    }
     fun bindData(photo: Photo){
         titleText.text=photo.title
         val url = "https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_m.jpg"

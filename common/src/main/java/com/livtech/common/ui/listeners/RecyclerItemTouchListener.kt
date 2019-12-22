@@ -1,12 +1,12 @@
-package com.livtech.common.ui
+package com.livtech.common.ui.listeners
 
 import android.content.Context
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
+import com.livtech.common.ui.listeners.OnListItemClickListener
 
 class RecyclerItemTouchListener(
     context: Context?,
