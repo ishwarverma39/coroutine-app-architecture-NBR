@@ -4,7 +4,7 @@ import retrofit2.Response
 
 /**
  * Subclass should extends this class to write their own network error parser and log the errors
- * also pass the instance of the subclass to @author to get the correct error
+ * also pass the instance of the subclass to get the correct error
  * message
  */
 open class ErrorMessageParser {
