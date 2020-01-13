@@ -31,22 +31,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions  "release"
-    productFlavors{
+    flavorDimensions "release"
+    productFlavors {
         def localPropertiesFile = rootProject.file("local.properties")
         def localProperties = new Properties()
         localProperties.load(new FileInputStream(localPropertiesFile))
+        def apiKey = localProperties['API_KEY'] == null ? "\"XYZ\"" : localProperties['API_KEY']
 
         internal {
             dimension 'release'
-            buildConfigField "String", "API_KEY", localProperties['API_KEY']
+            buildConfigField "String", "API_KEY", apiKey
         }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
