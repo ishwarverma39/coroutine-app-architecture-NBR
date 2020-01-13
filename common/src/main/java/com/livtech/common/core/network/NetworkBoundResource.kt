@@ -11,7 +11,7 @@ import retrofit2.Response
 
 abstract class NetworkBoundResource<ResultType, RequestType>(
     private val shouldLoad: Boolean = true,
-    var call: suspend () -> Response<RequestType>,
+    private val call: suspend () -> Response<RequestType>,
     scope: CoroutineScope,
     private val errorParser: ErrorMessageParser = ErrorMessageParser()
 ) {
