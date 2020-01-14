@@ -13,7 +13,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
     private val shouldLoad: Boolean = true,
     private val call: suspend () -> Response<RequestType>,
     scope: CoroutineScope,
-    private val errorParser: ErrorMessageParser = ErrorMessageParser()
+    private val errorParser: ErrorMessageParser = ErrorMessageParserImpl()
 ) {
     private val result: LiveData<Resource<ResultType?>>
 
@@ -39,7 +39,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
                     FAILED -> {
                         emitSource(
                             loadFromDb().map {
-                                Resource.Error(null, res.message)
+                                Resource.Failure(res.error, it)
                             }
                         )
                     }
@@ -59,16 +59,16 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
             call.invoke().let {
                 if (it.isSuccessful) {
                     if (it.body() == null) {
-                        Resource.Error(null, onApiCallFailed(it))
+                        Resource.Failure(onApiCallFailed(it))
                     } else {
                         Resource.Success(it.body())
                     }
                 } else {
-                    Resource.Error(null, onApiCallFailed(it))
+                    Resource.Failure(onApiCallFailed(it))
                 }
             }
         } catch (t: Throwable) {
-            Resource.Error(null, onNetworkError(t))
+            Resource.Failure(onNetworkError(t))
         }
 
     }
@@ -87,13 +87,13 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
     abstract suspend fun saveApiCallResponse(response: RequestType?)
 
     @WorkerThread
-    open fun onNetworkError(t: Throwable): String {
-        return errorParser.onNetworkError(t)
+    open fun onNetworkError(t: Throwable): ApiError {
+        return errorParser.onNetworkFailure(t)
     }
 
     @WorkerThread
-    open fun onApiCallFailed(response: Response<RequestType>): String {
-        return errorParser.onApiCallFailed(response)
+    open fun onApiCallFailed(response: Response<RequestType>): ApiError {
+        return errorParser.onApiCallFailure(response)
     }
 
     /**

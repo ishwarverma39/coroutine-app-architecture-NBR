@@ -5,7 +5,7 @@ import androidx.annotation.StringDef
 const val LOADING = "loading"
 const val SUCCESS = "success"
 const val FAILED = "failed"
-const val NO_INTERNET = "no internet"
+const val NO_INTERNET = "no_internet"
 
 @StringDef(
     LOADING,

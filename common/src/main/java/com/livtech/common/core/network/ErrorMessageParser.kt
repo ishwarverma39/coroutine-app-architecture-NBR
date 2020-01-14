@@ -7,12 +7,17 @@ import retrofit2.Response
  * also pass the instance of the subclass to get the correct error
  * message
  */
-open class ErrorMessageParser {
-    open fun onNetworkError(t: Throwable): String {
-        return t.localizedMessage as String
-    }
+interface ErrorMessageParser {
+    /**
+     * This method is used to parse the error which occurs at network level or
+     * parsing the response to result type gets failed
+     */
+    fun onNetworkFailure(throwable: Throwable): ApiError
 
-    open fun <T> onApiCallFailed(response: Response<T>): String {
-        return "Something went wrong"
-    }
+    /**
+     * This method is used to parse the errors when the request reaches to the server
+     * but there is an error due to bad request, data not found, or any exception happens
+     * at server side.
+     */
+    fun <T> onApiCallFailure(response: Response<T>): ApiError
 }
