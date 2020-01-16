@@ -18,5 +18,5 @@ There is a class  to make API call using Coroutines and store the data to the lo
   Step 2. Add the dependency to app build.gradle
 
 	dependencies {
-	        implementation 'com.github.ishwarverma39:kotlinCoroutineDemo:v1.0.2'
+	            implementation "com.github.ishwarverma39:CorotuineAppArchitecture-NBR:v1.0.4"
 	}
