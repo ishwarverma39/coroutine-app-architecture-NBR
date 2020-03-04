@@ -9,11 +9,11 @@ open class ErrorMessageParserImpl : ErrorMessageParser {
 
     override fun <T> onApiCallFailure(response: Response<T>): ApiError {
         if (response.code() == 200) {
-            return ApiError(APP_404, "Data not found", false)
+            return ApiError(AE_404, "Data not found", false)
         } else if (response.code() == 500) {
-            return ApiError(APP_500, "Internal server error", false)
+            return ApiError(AE_500, "Internal server error", false)
         }
-        return ApiError(APP_400, "Request is not correct", false)
+        return ApiError(AE_400, "Request is not correct", false)
     }
 
     override fun onNetworkFailure(throwable: Throwable): ApiError {

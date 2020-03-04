@@ -7,7 +7,7 @@ import kotlinx.coroutines.cancel
 open class BaseViewModel :ViewModel(){
 
     private fun cancelCalls(){
-        viewModelScope.coroutineContext.cancel()
+        viewModelScope.cancel()
     }
 
     override fun onCleared() {

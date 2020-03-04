@@ -4,7 +4,8 @@ import com.livtech.common.core.network.*
 
 sealed class Resource<out T>(
     val data: T? = null,
-    val message: String? = "", @NetworkStatus val status: String,
+    val message: String? = "",
+    @NetworkStatus val status: String,
     val error: ApiError? = null
 ) {
     class Success<out T>(data: T) :

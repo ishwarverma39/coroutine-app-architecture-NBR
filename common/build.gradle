@@ -39,7 +39,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
+    implementation "androidx.core:core-ktx:$kotlin_android"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -61,12 +61,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
 
     //Kotlin life cycle extensions
-    def arch_version = '2.2.0-rc03'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.1.0'
-    implementation "androidx.lifecycle:lifecycle-extensions:$arch_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$arch_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$arch_version"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$life_cycle"
+    implementation "androidx.lifecycle:lifecycle-extensions:$life_cycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$life_cycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$life_cycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$life_cycle"
 
     //Ui
     implementation 'androidx.recyclerview:recyclerview:1.1.0'

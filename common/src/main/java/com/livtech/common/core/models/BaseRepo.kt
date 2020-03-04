@@ -3,13 +3,21 @@ package com.livtech.common.core.models
 import com.livtech.common.core.network.ApiClient
 import com.livtech.common.core.network.ErrorMessageParser
 import com.livtech.common.core.network.ErrorMessageParserImpl
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
-open class BaseRepo (val scope: CoroutineScope, private val errorParser: ErrorMessageParser = ErrorMessageParserImpl()){
+open class BaseRepo(
+    val scope: CoroutineScope,
+    val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val errorParser: ErrorMessageParser = ErrorMessageParserImpl()
+) {
 
-    suspend fun <T> makeApiCall(call: suspend () -> Response<T>): Resource<T?> {
+    suspend fun <T> makeApiCall(req: Deferred<Response<T>>): Resource<T?> {
         return try {
+            val call = suspend { req.await() }
             call.invoke().let {
                 if (it.isSuccessful) {
                     if (it.body() == null) {

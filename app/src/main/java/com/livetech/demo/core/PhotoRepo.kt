@@ -8,9 +8,11 @@ import com.livtech.common.core.models.BaseRepo
 import com.livtech.common.core.models.Resource
 import com.livtech.common.core.network.NetworkBoundResource
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.launch
+import retrofit2.Response
 
 class PhotoRepo(scope: CoroutineScope) : BaseRepo(scope) {
-
     var photoData: PhotoData?
 
     init {
@@ -20,12 +22,7 @@ class PhotoRepo(scope: CoroutineScope) : BaseRepo(scope) {
     fun getPhotos(params: HashMap<String, Any>): LiveData<Resource<PhotoData?>> {
         photoData = null
         return object : NetworkBoundResource<PhotoData?, PhotoResponse>(
-            true,
-            {
-                apiService(PhotoApis::class.java).getPhotosAsync(AppConstants.BASE_URL, params)
-                    .await()
-            },
-            scope
+            true, scope, dispatcher
         ) {
 
             override fun loadFromDb(): LiveData<PhotoData?> {
@@ -38,6 +35,13 @@ class PhotoRepo(scope: CoroutineScope) : BaseRepo(scope) {
                 photoData = response?.photos
             }
 
+            override fun getRequestAsync(): Deferred<Response<PhotoResponse>> {
+                return apiService(PhotoApis::class.java).getPhotosAsync(
+                    AppConstants.BASE_URL, params)
+            }
+
         }.asLiveData
+
+
     }
 }

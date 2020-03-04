@@ -1,24 +1,27 @@
 package com.livtech.common.core.network
 
+import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.livtech.common.core.models.Resource
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
 abstract class NetworkBoundResource<ResultType, RequestType>(
     private val shouldLoad: Boolean = true,
-    private val call: suspend () -> Response<RequestType>,
-    scope: CoroutineScope,
+    private val scope: CoroutineScope,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val errorParser: ErrorMessageParser = ErrorMessageParserImpl()
 ) {
     private val result: LiveData<Resource<ResultType?>>
 
     init {
-        result = liveData(scope.coroutineContext + Dispatchers.IO) {
+        result = liveData(scope.coroutineContext + dispatcher) {
             val disposable = emitSource(
                 loadFromDb().map {
                     Resource.Loading(it, getLoadingMessage())
@@ -56,6 +59,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
 
     private suspend fun makeApiCall(): Resource<RequestType?> {
         return try {
+            val call = suspend { getRequestAsync().await() }
             call.invoke().let {
                 if (it.isSuccessful) {
                     if (it.body() == null) {
@@ -102,4 +106,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
     open fun getLoadingMessage(): String {
         return "Loading..."
     }
+
+    @MainThread
+    abstract fun getRequestAsync(): Deferred<Response<RequestType>>
 }
