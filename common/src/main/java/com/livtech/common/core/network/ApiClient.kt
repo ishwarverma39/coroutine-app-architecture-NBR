@@ -1,10 +1,11 @@
 package com.livtech.common.core.network
 
+import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class ApiClient private constructor() {
@@ -26,11 +27,12 @@ class ApiClient private constructor() {
                 .build()
         }
 
+        val gson = GsonBuilder().setLenient().create()
 
         fun retrofit(): Retrofit = Retrofit.Builder()
             .client(httpClient)
             .baseUrl(baseUrl)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
     }
