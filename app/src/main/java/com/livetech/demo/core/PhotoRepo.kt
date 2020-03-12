@@ -7,22 +7,26 @@ import com.livetech.demo.core.models.PhotoResponse
 import com.livtech.common.core.models.BaseRepo
 import com.livtech.common.core.models.Resource
 import com.livtech.common.core.network.NetworkBoundResource
+import com.livtech.common.core.utils.DefaultDispatcherProvider
+import com.livtech.common.core.utils.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class PhotoRepo(scope: CoroutineScope) : BaseRepo(scope) {
+open class PhotoRepo(
+    scope: CoroutineScope,
+    dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
+) : BaseRepo(scope, dispatcherProvider) {
     var photoData: PhotoData?
 
     init {
         photoData = null
     }
 
-    fun getPhotos(params: HashMap<String, Any>): LiveData<Resource<PhotoData?>> {
+    open fun getPhotos(params: HashMap<String, Any>): LiveData<Resource<PhotoData?>> {
         photoData = null
         return object : NetworkBoundResource<PhotoData?, PhotoResponse>(
-            true, scope, dispatcher
+            true, scope, dispatcherProvider.io()
         ) {
 
             override fun loadFromDb(): LiveData<PhotoData?> {
@@ -37,7 +41,8 @@ class PhotoRepo(scope: CoroutineScope) : BaseRepo(scope) {
 
             override fun getRequestAsync(): Deferred<Response<PhotoResponse>> {
                 return apiService(PhotoApis::class.java).getPhotosAsync(
-                    AppConstants.BASE_URL, params)
+                    AppConstants.BASE_URL, params
+                )
             }
 
         }.asLiveData

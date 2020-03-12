@@ -4,14 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.cancel
 
-open class BaseViewModel :ViewModel(){
-
-    private fun cancelCalls(){
-        viewModelScope.cancel()
-    }
+open class BaseViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        cancelCalls()
+        viewModelScope.cancel()
     }
 }

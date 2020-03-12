@@ -3,15 +3,15 @@ package com.livtech.common.core.models
 import com.livtech.common.core.network.ApiClient
 import com.livtech.common.core.network.ErrorMessageParser
 import com.livtech.common.core.network.ErrorMessageParserImpl
-import kotlinx.coroutines.CoroutineDispatcher
+import com.livtech.common.core.utils.DefaultDispatcherProvider
+import com.livtech.common.core.utils.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
 
 open class BaseRepo(
     val scope: CoroutineScope,
-    val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider(),
     private val errorParser: ErrorMessageParser = ErrorMessageParserImpl()
 ) {
 

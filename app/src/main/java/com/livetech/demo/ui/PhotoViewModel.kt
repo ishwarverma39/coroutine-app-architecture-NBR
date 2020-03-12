@@ -11,12 +11,20 @@ import com.livtech.common.core.network.LOADING
 import com.livtech.common.core.network.SUCCESS
 import com.livtech.common.ui.viewmodels.BaseViewModel
 
-class PhotoViewModel : BaseViewModel() {
+class PhotoViewModel : BaseViewModel {
+    private val repo: PhotoRepo
+
+    constructor() : super() {
+        repo = PhotoRepo(viewModelScope)
+    }
+
+    constructor(repo: PhotoRepo) : super() {
+        this.repo = repo
+    }
 
     private val photos = ArrayList<Photo>(0)
     val photoData = MutableLiveData<ArrayList<Photo>>()
     var page: Int = 1
-    private val repo = PhotoRepo(viewModelScope)
     var totalPages = 1
     var searchFor = ""
     val loading = MutableLiveData<Boolean>()
@@ -27,15 +35,14 @@ class PhotoViewModel : BaseViewModel() {
                 updateList(resource.data)
             }
             when (resource.status) {
-                SUCCESS -> {
-                    loading.value=false
+                FAILED, SUCCESS -> {
+                    loading.value = false
+                    if (resource.status == FAILED) {
+                        //todo show error message
+                    }
                 }
-                FAILED -> {
-                   loading.value=false
-                    //todo show error message
-                }
-                LOADING ->{
-                    loading.value=true
+                LOADING -> {
+                    loading.value = true
                 }
 
             }

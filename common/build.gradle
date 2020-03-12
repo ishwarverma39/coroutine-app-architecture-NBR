@@ -60,6 +60,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutineVersion"
 
+
+
     //Kotlin life cycle extensions
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$life_cycle"
     implementation "androidx.lifecycle:lifecycle-extensions:$life_cycle"
@@ -72,5 +74,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+
 
 }

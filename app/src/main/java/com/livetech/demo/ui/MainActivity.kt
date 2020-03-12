@@ -6,7 +6,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.livetech.demo.R
@@ -59,7 +59,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModels() {
-        viewModel = ViewModelProviders.of(this).get(PhotoViewModel::class.java)
+        viewModel =
+            ViewModelProvider(this, defaultViewModelProviderFactory).get(PhotoViewModel::class.java)
     }
 
     private fun initPhotos() {
@@ -74,8 +75,8 @@ class MainActivity : AppCompatActivity() {
 
     private val onScrollListener: SimpleScrollListener =
         object : SimpleScrollListener() {
-           override fun onScrolledToBottom(){
+            override fun onScrolledToBottom() {
                 viewModel.loadNextPage()
-           }
+            }
         }
 }
