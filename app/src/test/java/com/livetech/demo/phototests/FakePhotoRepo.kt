@@ -17,8 +17,8 @@ class FakePhotoRepo(scope: CoroutineScope, dispatcherProvider: DispatcherProvide
     override fun getPhotos(params: HashMap<String, Any>): LiveData<Resource<PhotoData?>> {
         return liveData(scope.coroutineContext + dispatcherProvider.io()) {
             emit(Resource.Loading(null, "Loading"))
-            delay(5000)
-            emit(Resource.Success(Gson().fromJson(response, PhotoResponse::class.java).photos))
+            photoData = Gson().fromJson(response, PhotoResponse::class.java).photos
+            emit(Resource.Success(photoData))
         }
     }
 

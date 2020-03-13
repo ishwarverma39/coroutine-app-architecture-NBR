@@ -26,6 +26,7 @@ class CoroutineTestRule(val testDispatcher: TestCoroutineDispatcher = TestCorout
         Dispatchers.setMain(testDispatcher)
     }
 
+
     override fun finished(description: Description?) {
         super.finished(description)
         Dispatchers.resetMain()
