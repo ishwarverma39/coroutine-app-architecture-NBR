@@ -1,7 +1,6 @@
 package com.livetech.demo.ui
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.livetech.demo.core.AppConstants
 import com.livetech.demo.core.PhotoRepo
 import com.livetech.demo.core.models.Photo
@@ -11,18 +10,8 @@ import com.livtech.common.core.network.LOADING
 import com.livtech.common.core.network.SUCCESS
 import com.livtech.common.ui.viewmodels.BaseViewModel
 
-class PhotoViewModel : BaseViewModel {
-    private val repo: PhotoRepo
-
-    constructor() : super() {
-        repo = PhotoRepo(viewModelScope)
-    }
-
-    constructor(repo: PhotoRepo) : super() {
-        this.repo = repo
-    }
-
-    private val photos = ArrayList<Photo>(0)
+class PhotoViewModel(private val repo: PhotoRepo = PhotoRepo()) : BaseViewModel() {
+    private val photos = ArrayList<Photo>(AppConstants.API_PER_PAGE_VALUE)
     val photoData = MutableLiveData<ArrayList<Photo>>()
     var page: Int = 1
     var totalPages = 1

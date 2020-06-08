@@ -11,7 +11,7 @@ sealed class Resource<out T>(
     class Success<out T>(data: T) :
         Resource<T>(data, "Request Successful", SUCCESS)
 
-    class Loading<out T>(data: T? = null, message: String? = "") :
+    class Loading<out T>(data: T? = null, message: String? = "Loading...") :
         Resource<T>(data, message, LOADING)
 
     class Failure<out T>(error: ApiError?, data: T? = null) :

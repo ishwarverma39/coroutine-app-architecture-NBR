@@ -8,14 +8,12 @@ import com.livetech.demo.core.models.PhotoData
 import com.livetech.demo.core.models.PhotoResponse
 import com.livtech.common.core.models.Resource
 import com.livtech.common.core.utils.DispatcherProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 
-class FakePhotoRepo(scope: CoroutineScope, dispatcherProvider: DispatcherProvider) :
-    PhotoRepo(scope, dispatcherProvider) {
+class FakePhotoRepo(dispatcherProvider: DispatcherProvider) :
+    PhotoRepo(dispatcherProvider) {
 
     override fun getPhotos(params: HashMap<String, Any>): LiveData<Resource<PhotoData?>> {
-        return liveData(scope.coroutineContext + dispatcherProvider.io()) {
+        return liveData(dispatcherProvider.io()) {
             emit(Resource.Loading(null, "Loading"))
             photoData = Gson().fromJson(response, PhotoResponse::class.java).photos
             emit(Resource.Success(photoData))

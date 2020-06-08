@@ -13,6 +13,7 @@ import com.livetech.demo.R
 import com.livetech.demo.core.models.Photo
 import com.livtech.common.ui.listeners.SimpleScrollListener
 import com.livtech.common.ui.listeners.SimpleSearchTextChangeListener
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var viewModel: PhotoViewModel
@@ -47,8 +48,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initSearchView() {
-        val search = findViewById<EditText>(R.id.search_edit)
-        search.addTextChangedListener(
+        search_edit.addTextChangedListener(
             SimpleSearchTextChangeListener(
                 onSearchTextChange = { searchText ->
                     viewModel.doSearching(searchText)

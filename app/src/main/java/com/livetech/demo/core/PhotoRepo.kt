@@ -14,9 +14,8 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Response
 
 open class PhotoRepo(
-    scope: CoroutineScope,
     dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider()
-) : BaseRepo(scope, dispatcherProvider) {
+) : BaseRepo(dispatcherProvider) {
     var photoData: PhotoData?
 
     init {
@@ -26,7 +25,7 @@ open class PhotoRepo(
     open fun getPhotos(params: HashMap<String, Any>): LiveData<Resource<PhotoData?>> {
         photoData = null
         return object : NetworkBoundResource<PhotoData?, PhotoResponse>(
-            true, scope, dispatcherProvider.io()
+            true, dispatcherProvider.io()
         ) {
 
             override fun loadFromDb(): LiveData<PhotoData?> {

@@ -1,5 +1,7 @@
 package com.livtech.common.core.models
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import com.livtech.common.core.network.ApiClient
 import com.livtech.common.core.network.ErrorMessageParser
 import com.livtech.common.core.network.ErrorMessageParserImpl
@@ -10,27 +12,30 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Response
 
 open class BaseRepo(
-    val scope: CoroutineScope,
     val dispatcherProvider: DispatcherProvider = DefaultDispatcherProvider(),
     private val errorParser: ErrorMessageParser = ErrorMessageParserImpl()
 ) {
 
-    suspend fun <T> makeApiCall(req: Deferred<Response<T>>): Resource<T?> {
-        return try {
-            val call = suspend { req.await() }
-            call.invoke().let {
-                if (it.isSuccessful) {
-                    if (it.body() == null) {
-                        Resource.Failure(errorParser.onApiCallFailure(it))
+     fun <T> makeApiCall(req: Deferred<Response<T>>): LiveData<Resource<T?>> {
+        return liveData {
+            try {
+                emit(Resource.Loading())
+                val call = suspend { req.await() }
+                val result = call.invoke().let {
+                    if (it.isSuccessful) {
+                        if (it.body() == null) {
+                            Resource.Failure(errorParser.onApiCallFailure(it), null)
+                        } else {
+                            Resource.Success(data = it.body())
+                        }
                     } else {
-                        Resource.Success(it.body())
+                        Resource.Failure(errorParser.onApiCallFailure(it))
                     }
-                } else {
-                    Resource.Failure(errorParser.onApiCallFailure(it))
                 }
+                emit(result)
+            } catch (t: Throwable) {
+                emit(Resource.Failure( errorParser.onNetworkFailure(t), null))
             }
-        } catch (t: Throwable) {
-            Resource.Failure(errorParser.onNetworkFailure(t))
         }
     }
 

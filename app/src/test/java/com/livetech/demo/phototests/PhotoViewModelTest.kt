@@ -29,7 +29,7 @@ class PhotoViewModelTest {
 
     @Before()
     fun setup() {
-        repo = FakePhotoRepo(TestCoroutineScope(), coroutinesTestRule.testDispatcherProvider)
+        repo = FakePhotoRepo(coroutinesTestRule.testDispatcherProvider)
         photoViewModel = PhotoViewModel(repo)
     }
 
@@ -62,16 +62,18 @@ class PhotoViewModelTest {
 
     @Test
     fun `photo list load next page test`() {
-        //given
-        val nextPage = 2;
-        val totalPage = 66810
-        //when
-        photoViewModel.doSearching("google")
-        photoViewModel.loadNextPage()
-        //then
-        photoViewModel.photoData.observeForTesting {
-            assertEquals(photoViewModel.page, nextPage)
-            assertEquals(photoViewModel.totalPages, totalPage)
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            //given
+            val nextPage = 2;
+            val totalPage = 66810
+            //when
+            photoViewModel.doSearching("google")
+            photoViewModel.loadNextPage()
+            //then
+            photoViewModel.photoData.observeForTesting {
+                assertEquals(photoViewModel.page, nextPage)
+                assertEquals(photoViewModel.totalPages, totalPage)
+            }
         }
     }
 

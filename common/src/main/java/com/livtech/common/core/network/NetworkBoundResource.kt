@@ -14,14 +14,13 @@ import retrofit2.Response
 
 abstract class NetworkBoundResource<ResultType, RequestType>(
     private val shouldLoad: Boolean = true,
-    private val scope: CoroutineScope,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val errorParser: ErrorMessageParser = ErrorMessageParserImpl()
 ) {
     private val result: LiveData<Resource<ResultType?>>
 
     init {
-        result = liveData(scope.coroutineContext + dispatcher) {
+        result = liveData(dispatcher) {
             val disposable = emitSource(
                 loadFromDb().map {
                     Resource.Loading(it, getLoadingMessage())
