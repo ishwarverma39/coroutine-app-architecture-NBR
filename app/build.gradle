@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.livetech.demo"
         minSdkVersion 19
@@ -79,7 +79,7 @@ dependencies {
 
     //Okhttp3
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
     implementation project(path: ':common')
 
     //Kotlin life cycle extensions

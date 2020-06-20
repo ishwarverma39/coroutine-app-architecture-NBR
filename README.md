@@ -1,4 +1,4 @@
-# CorotuineAppArchitecture-NBR
+# CoroutineAppArchitecture-NBR
 This is a Library to use life cycle extension with App Architecture component with Kotlin Coroutines.
 
 There is a class  to make API call using Coroutines and store the data to the local database using Room Database.
@@ -18,5 +18,5 @@ There is a class  to make API call using Coroutines and store the data to the lo
   Step 2. Add the dependency to app build.gradle
 
 	dependencies {
-	            implementation "com.github.ishwarverma39:coroutine-app-architecture-NBR:v1.0.9"
+	            implementation "com.github.ishwarverma39:coroutine-app-architecture-NBR:v1.1.0"
 	}
