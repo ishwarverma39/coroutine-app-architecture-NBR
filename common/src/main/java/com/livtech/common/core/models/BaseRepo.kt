@@ -40,6 +40,6 @@ open class BaseRepo(
     }
 
     fun <T : Any> apiService(classType: Class<T>): T {
-        return ApiClient.retrofit().create(classType)
+        return ApiClient.retrofit.create(classType)
     }
 }

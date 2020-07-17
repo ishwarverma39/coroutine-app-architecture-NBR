@@ -1,15 +1,13 @@
 package com.livetech.demo.core
 
-import com.livetech.demo.BuildConfig
 import okhttp3.Interceptor
+import okhttp3.Response
 
-object ApiAuthenticator {
-
-    //Creating Auth Interceptor to add api_key query in front of all the requests.
-    val authInterceptor = Interceptor { chain ->
+class AppInterceptor(private val apiKey: String) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
         val newUrl = chain.request().url()
             .newBuilder()
-            .addQueryParameter(AppConstants.API_KEY, BuildConfig.API_KEY)
+            .addQueryParameter(AppConstants.API_KEY, apiKey)
             .build()
 
         val newRequest = chain.request()
@@ -17,6 +15,6 @@ object ApiAuthenticator {
             .url(newUrl)
             .build()
 
-        chain.proceed(newRequest)
+        return chain.proceed(newRequest)
     }
 }
