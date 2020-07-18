@@ -7,7 +7,6 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import com.livtech.common.core.models.Resource
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import retrofit2.Response
@@ -30,7 +29,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
                 val res = makeApiCall()
                 disposable.dispose()
                 when (res.status) {
-                    SUCCESS -> {
+                    NetworkStatus.SUCCESS -> {
                         saveApiCallResponse(res.data)
                         emitSource(
                             loadFromDb().map {
@@ -38,7 +37,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
                             }
                         )
                     }
-                    FAILED -> {
+                    NetworkStatus.FAILED -> {
                         emitSource(
                             loadFromDb().map {
                                 Resource.Failure(res.error, it)

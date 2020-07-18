@@ -5,9 +5,7 @@ import com.livetech.demo.core.AppConstants
 import com.livetech.demo.core.PhotoRepo
 import com.livetech.demo.core.models.Photo
 import com.livetech.demo.core.models.PhotoData
-import com.livtech.common.core.network.FAILED
-import com.livtech.common.core.network.LOADING
-import com.livtech.common.core.network.SUCCESS
+import com.livtech.common.core.network.NetworkStatus
 import com.livtech.common.ui.viewmodels.BaseViewModel
 
 class PhotoViewModel(private val repo: PhotoRepo = PhotoRepo()) : BaseViewModel() {
@@ -24,13 +22,13 @@ class PhotoViewModel(private val repo: PhotoRepo = PhotoRepo()) : BaseViewModel(
                 updateList(resource.data)
             }
             when (resource.status) {
-                FAILED, SUCCESS -> {
+                NetworkStatus.FAILED, NetworkStatus.SUCCESS -> {
                     loading.value = false
-                    if (resource.status == FAILED) {
+                    if (resource.status == NetworkStatus.FAILED) {
                         //todo show error message
                     }
                 }
-                LOADING -> {
+                NetworkStatus.LOADING -> {
                     loading.value = true
                 }
 
